@@ -1,6 +1,8 @@
 package com.blk.testcolorchooser;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -17,6 +19,10 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.blk.testcolorchooser.scenarios.JsonParser;
+import com.blk.testcolorchooser.scenarios.LedScenario;
+
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
@@ -24,11 +30,78 @@ import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
     static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+    final String val1 = "{\n" +
+            "\t\"nameMode\": \"custom\",\n" +
+            "  \t\"colorMode\" : \"#ffffff\",\n" +
+            "  \t\"brigthness\" : \"255\",\n" +
+            "\t\"writeToController\": true,\n" +
+            "\t\"leds\":[\n" +
+            "\t{\n" +
+            "\t\t\"nleds\":\"3\",\n" +
+            "\t\t\"ledId\":\"led1Id_1\",\n" +
+            "\t\t\"lastLedId\": \"none\",\n" +
+            "\t\t\"nextLedId\": \"none\",\n" +
+            "\t\t\"duration\" : \"400\",\n" +
+            "\t\t\"color\" :\"#ff00ff\",\n" +
+            "      \t\"brightness\" : \"255\",\n" +
+            "\t\t\"delayBefore\":\"100\",\n" +
+            "\t\t\"delayAfter\":\"100\"\n" +
+            "\t},\n" +
+            "\t{\n" +
+            "\t\t\"nleds\":\"8\",\n" +
+            "\t\t\"ledId\":\"led1Id_1\",\n" +
+            "\t\t\"lastLedId\": \"none\",\n" +
+            "\t\t\"nextLedId\": \"none\",\n" +
+            "\t\t\"duration\" : \"400\",\n" +
+            "      \t\"brightness\" : \"255\",\n" +
+            "\t\t\"color\" :\"#ff00ff\",\n" +
+            "\t\t\"delayBefore\":\"100\",\n" +
+            "\t\t\"delayAfter\":\"100\"\n" +
+            "\t}\n" +
+            "\t]\n" +
+            "}";
+
+    final String val2 = "{\n" +
+            "\t\"nameMode\": \"custom\",\n" +
+            "  \t\"colorMode\" : \"#ffffff\",\n" +
+            "  \t\"brigthness\" : \"255\",\n" +
+            "\t\"writeToController\": true\n" +
+            "}";
+    RecyclerView recyclerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.alternative_layout);
+        recyclerView = findViewById(R.id.recycler_view);
+        //initOld();
+    //    bt();
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 
+        recyclerView.setLayoutManager(layoutManager);
+
+        LedScenario ls = new LedScenario();
+        try {
+            ls = JsonParser.getResponseStep(val1, LedScenario.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        LedScenario ls3 = new LedScenario();
+        try {
+            ls3 = JsonParser.getResponseStep(val2, LedScenario.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<LedScenario> al = new ArrayList<>();
+        al.add(ls);
+        al.add(ls3);
+        recyclerView.setAdapter(new RecyclerViewAdapter(context,al));
+    }
+
+
+    void initOld(){
         final SeekBar rbar = findViewById(R.id.seekBarR);
         final SeekBar gbar = findViewById(R.id.seekBarG);
         final SeekBar bbar = findViewById(R.id.seekBarB);
@@ -69,11 +142,7 @@ public class MainActivity extends AppCompatActivity {
         gbar.setOnSeekBarChangeListener(listener);
         bbar.setOnSeekBarChangeListener(listener);
         brbar.setOnSeekBarChangeListener(listener);
-        bt();
     }
-
-
-
 
 
     BluetoothAdapter adapter;
