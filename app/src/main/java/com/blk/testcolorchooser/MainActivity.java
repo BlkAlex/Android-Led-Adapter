@@ -30,6 +30,8 @@ import com.flask.colorpicker.OnColorChangedListener;
 import com.flask.colorpicker.OnColorSelectedListener;
 import com.flask.colorpicker.builder.ColorPickerClickListener;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
+import com.madrapps.pikolo.ColorPicker;
+import com.madrapps.pikolo.listeners.SimpleColorSelectionListener;
 import com.skydoves.colorpickerview.ColorEnvelope;
 import com.skydoves.colorpickerview.ColorPickerDialog;
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener;
@@ -87,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initOld();
         bt();
+
         Button tw = findViewById(R.id.id1);
         tw.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +103,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 showNewLibDialog();
+            }
+        });
+
+        Button tw3 = findViewById(R.id.id3);
+        tw3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showNewDialog();
             }
         });
       //  showDialog();
@@ -134,14 +145,21 @@ public class MainActivity extends AppCompatActivity {
     void showNewDialog(){
 
         final CustomDialogClass dialog = new CustomDialogClass(this);
+
         dialog.show();
         Button saveButton = (Button)dialog.findViewById(R.id.okb);
+        dialog.setCurrentColor(currentColor);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog.getColor();
+                currentColor = dialog.getColor();
+                setIntColorToSeeks(Integer.toHexString(currentColor));
+                dialog.dismiss();
             }
         });
+
+
+
 
 
     }

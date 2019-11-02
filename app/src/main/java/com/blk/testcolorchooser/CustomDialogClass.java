@@ -8,6 +8,8 @@ import android.view.Window;
 import android.widget.Button;
 
 import com.flask.colorpicker.ColorPickerView;
+import com.madrapps.pikolo.ColorPicker;
+import com.madrapps.pikolo.listeners.SimpleColorSelectionListener;
 
 public class CustomDialogClass extends Dialog implements
     android.view.View.OnClickListener {
@@ -22,6 +24,14 @@ public class CustomDialogClass extends Dialog implements
     this.c = a;
   }
 
+  int currentColor = 0;
+
+  ColorPicker colorPicker;
+
+  void setCurrentColor(int color){
+    currentColor = color;
+    colorPicker.setColor(currentColor);
+  }
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -32,18 +42,24 @@ public class CustomDialogClass extends Dialog implements
     yes.setOnClickListener(this);
     no.setOnClickListener(this);
 
+
+    colorPicker = findViewById(R.id.colorPicker);
+    colorPicker.setColorSelectionListener(new SimpleColorSelectionListener() {
+      @Override
+      public void onColorSelected(int color) {
+        // Do whatever you want with the color
+        currentColor = color;            }
+    });
   }
 
-public void getColor(){
-  ColorPickerView cpv = findViewById(R.id.color_picker_view);
+public int getColor(){
+  return  currentColor;
 
 }
   @Override
   public void onClick(View v) {
     switch (v.getId()) {
-    case R.id.okb:
-      c.finish();
-      break;
+
     case R.id.cancelb:
       dismiss();
       break;
