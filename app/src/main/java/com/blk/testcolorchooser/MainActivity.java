@@ -4,23 +4,35 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.ColorSpace;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blk.testcolorchooser.scenarios.JsonParser;
 import com.blk.testcolorchooser.scenarios.LedScenario;
+import com.flask.colorpicker.ColorPickerView;
+import com.flask.colorpicker.OnColorChangedListener;
+import com.flask.colorpicker.OnColorSelectedListener;
+import com.flask.colorpicker.builder.ColorPickerClickListener;
+import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
+import com.skydoves.colorpickerview.ColorEnvelope;
+import com.skydoves.colorpickerview.ColorPickerDialog;
+import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener;
 
 
 import java.io.IOException;
@@ -72,34 +84,150 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.alternative_layout);
-        recyclerView = findViewById(R.id.recycler_view);
-        //initOld();
-    //    bt();
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        setContentView(R.layout.activity_main);
+        initOld();
+        bt();
+        Button tw = findViewById(R.id.id1);
+        tw.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDialog();
+            }
+        });
 
-        recyclerView.setLayoutManager(layoutManager);
+        Button tw2 = findViewById(R.id.id2);
+        tw2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showNewLibDialog();
+            }
+        });
+      //  showDialog();
+//        recyclerView = findViewById(R.id.recycler_view);
+//        //initOld();
+//    //    bt();
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+//
+//        recyclerView.setLayoutManager(layoutManager);
+//
+//        LedScenario ls = new LedScenario();
+//        try {
+//            ls = JsonParser.getResponseStep(val1, LedScenario.class);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        LedScenario ls3 = new LedScenario();
+//        try {
+//            ls3 = JsonParser.getResponseStep(val2, LedScenario.class);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        ArrayList<LedScenario> al = new ArrayList<>();
+//        al.add(ls);
+//        al.add(ls3);
+//        recyclerView.setAdapter(new RecyclerViewAdapter(context,al));
+    }
+    int currentColor  = Color.RED;
 
-        LedScenario ls = new LedScenario();
-        try {
-            ls = JsonParser.getResponseStep(val1, LedScenario.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    void showNewDialog(){
 
-        LedScenario ls3 = new LedScenario();
-        try {
-            ls3 = JsonParser.getResponseStep(val2, LedScenario.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        final CustomDialogClass dialog = new CustomDialogClass(this);
+        dialog.show();
+        Button saveButton = (Button)dialog.findViewById(R.id.okb);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.getColor();
+            }
+        });
 
-        ArrayList<LedScenario> al = new ArrayList<>();
-        al.add(ls);
-        al.add(ls3);
-        recyclerView.setAdapter(new RecyclerViewAdapter(context,al));
+
     }
 
+    public void showNewLibDialog(){
+        new ColorPickerDialog.Builder(this, AlertDialog.THEME_DEVICE_DEFAULT_DARK)
+                .setTitle("ColorPicker Dialog")
+                .setPreferenceName("MyColorPickerDialog")
+                .setPositiveButton("yep",
+                        new ColorEnvelopeListener() {
+                            @Override
+                            public void onColorSelected(ColorEnvelope envelope, boolean fromUser) {
+                                setIntColorToSeeks(envelope.getHexCode());
+                            }
+                        })
+                .setNegativeButton("no",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        })
+                .attachAlphaSlideBar(true) // default is true. If false, do not show the AlphaSlideBar.
+                .attachBrightnessSlideBar(true)  // default is true. If false, do not show the BrightnessSlideBar.
+                .show();
+    }
+    void showDialog(){
+
+        ColorPickerDialogBuilder
+                .with(context)
+                .setTitle("Choose color")
+                .initialColor(currentColor)
+                .lightnessSliderOnly()
+                .wheelType(ColorPickerView.WHEEL_TYPE.CIRCLE)
+                .density(12)
+                .setOnColorSelectedListener(new OnColorSelectedListener() {
+                    @Override
+                    public void onColorSelected(int selectedColor) {
+                        Toast toast = Toast.makeText(getApplicationContext(),
+                                ("onColorSelected: 0x" + Integer.toHexString(selectedColor)), Toast.LENGTH_SHORT);
+                        toast.show();
+
+
+                    }
+                })
+                .setOnColorChangedListener(new OnColorChangedListener() {
+                    @Override
+                    public void onColorChanged(int selectedColor) {
+                        Log.d("SC", "onColorChanged: 0x " +Integer.toHexString(selectedColor));
+                    }
+                })
+                .setPositiveButton("ok", new ColorPickerClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
+                        int p = 0;
+                        Log.d("rfd","onClick: " + String.valueOf(selectedColor));
+
+                        currentColor = selectedColor;
+                        setIntColorToSeeks(Integer.toHexString(selectedColor));
+                        //changeBackgroundColor(selectedColor);
+                    }
+                })
+                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .build()
+                .show();
+    }
+
+    void setIntColorToSeeks(String hexColor ){
+        int red =(int) Long.parseLong(hexColor.substring(2,4),16);
+        int green = (int) Long.parseLong(hexColor.substring(4,6),16);
+        int blue = (int) Long.parseLong(hexColor.substring(6,8),16);
+        int brightness = (int) Long.parseLong(hexColor.substring(0,2),16);
+
+
+        TextView tw = findViewById(R.id.color);
+        tw.setBackgroundColor(android.graphics.Color.argb(brightness,red, green, blue));
+
+
+
+        sendRGB(red,green,blue,brightness);
+
+    }
 
     void initOld(){
         final SeekBar rbar = findViewById(R.id.seekBarR);
@@ -154,6 +282,8 @@ public class MainActivity extends AppCompatActivity {
     private ProgressDialog progress;
     void bt(){
             adapter = BluetoothAdapter.getDefaultAdapter();
+            if (adapter == null)
+                return;
             paireddevices=adapter.getBondedDevices();
             ArrayList<String> list = new ArrayList();
             if (paireddevices.size()>0)
