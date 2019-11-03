@@ -28,6 +28,11 @@ public class BluetoothHelper {
     private String address;
 
     BluetoothSocket btSocket = null;
+
+    public boolean isBtConnected() {
+        return isBtConnected;
+    }
+
     private boolean isBtConnected = false;
     private ProgressDialog progress;
 
@@ -74,8 +79,17 @@ public class BluetoothHelper {
         }
     }
 
-    void sendScenario(ScenarioNames name,int speedBetw,int speedCh,int maxDelay){
+    void sendScenario(String name,int speedBetw,int speedCh,int maxDelay){
+        if (isBtConnected) {
+            String s = String.format("{\"scenario\":\"%s\" , \"delayChairs\":\"%s\" , \"delayPerChair\":\"%s\" , \"delayAfterAnimation\":\"%s\"}\n", name, speedBetw, speedCh, maxDelay);
 
+            Log.d("MESSAGE SCENARIO", s);
+            try {
+                btSocket.getOutputStream().write(s.getBytes());
+            } catch (IOException e) {
+                Log.d("bt:", "Error");
+            }
+        }
     }
     private class connectbt extends AsyncTask<Void, Void, Void>  // UI thread
     {

@@ -2,6 +2,10 @@ package com.blk.testcolorchooser;
 
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -32,12 +36,15 @@ public class ChooseScenarioActivity extends AppCompatActivity {
         setContentView(R.layout.choosescenariolayout);
         final BluetoothHelper bh = new BluetoothHelper(this);
 
+        setColorToConnectionStatus(bh);
+
+
         final Spinner spinner = findViewById(R.id.spinner);
 
         ScenarioNames va[] = ScenarioNames.values();
         ArrayList <String> snlist = new ArrayList<>();
         for (ScenarioNames  sn : va){
-            snlist.add(sn.getName());
+            snlist.add(sn.getStringName());
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, snlist);
@@ -90,8 +97,8 @@ public class ChooseScenarioActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (bh.connect() == 0) {
-                    bh.sendScenario(ScenarioNames.valueOf(spinner.getSelectedItem().toString()), seekBTW.getProgress(), seekCh.getProgress(), seekDelay.getProgress());
+                if (bh.isBtConnected() == false) {
+                    bh.connect();
                 }
             }
         });
@@ -108,6 +115,13 @@ public class ChooseScenarioActivity extends AppCompatActivity {
                                 " Delay = " + seekDelay.getProgress()
                         , Toast.LENGTH_SHORT);
                 toast.show();
+                String sendStringNameScenario = "";
+                for (ScenarioNames sn : ScenarioNames.values()){
+                    if (sn.getStringName().equals(spinner.getSelectedItem().toString()))
+                        sendStringNameScenario = sn.getName();
+                }
+                bh.sendScenario(sendStringNameScenario, seekBTW.getProgress(), seekCh.getProgress(), seekDelay.getProgress());
+
             }
         });
 
@@ -121,7 +135,6 @@ public class ChooseScenarioActivity extends AppCompatActivity {
                 .with(this)
                 .setTitle("Choose color")
                 .initialColor(currentColor)
-                .lightnessSliderOnly()
                 .wheelType(ColorPickerView.WHEEL_TYPE.CIRCLE)
                 .density(12)
                 .setOnColorSelectedListener(new OnColorSelectedListener() {
@@ -158,8 +171,8 @@ public class ChooseScenarioActivity extends AppCompatActivity {
                         int green = (int) Long.parseLong(hexColor.substring(4,6),16);
                         int blue = (int) Long.parseLong(hexColor.substring(6,8),16);
                         int brightness = (int) Long.parseLong(hexColor.substring(0,2),16);
-                        tw.setBackgroundColor(android.graphics.Color.argb(brightness,red, green, blue));
-
+                        //tw.setBackgroundColor(android.graphics.Color.argb(brightness,red, green, blue));
+                        changeTextViewDrawable(tw,selectedColor,0);
 
                         //setIntColorToSeeks(Integer.toHexString(selectedColor));
                         //changeBackgroundColor(selectedColor);
@@ -175,4 +188,22 @@ public class ChooseScenarioActivity extends AppCompatActivity {
     }
 
 
+    public static void changeTextViewDrawable(View v, int backgroundColor, int borderColor) {
+        GradientDrawable shape = new GradientDrawable();
+        shape.setShape(GradientDrawable.RECTANGLE);
+        shape.setCornerRadii(new float[] { 100, 100, 100, 100, 100,100,100, 100 });
+        shape.setColor(backgroundColor);
+       // shape.setStroke(3, borderColor);
+        v.setBackground(shape);
+    }
+
+    void setColorToConnectionStatus(BluetoothHelper bh){
+        TextView tw = findViewById(R.id.connectionstatus);
+        if (bh.isBtConnected())
+            tw.setBackgroundColor(getColor(R.color.succes));
+        else
+            tw.setBackgroundColor(getColor(R.color.fail));
+
+
+    }
 }
