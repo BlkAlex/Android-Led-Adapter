@@ -170,6 +170,16 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/brlay" />
 
+    <Button
+        android:id="@+id/btnNew"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="30dp"
+        android:text="новая активность"
+        android:textAlignment="center"
+        app:layout_constraintTop_toBottomOf="@id/lcolor"
+       ></Button>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

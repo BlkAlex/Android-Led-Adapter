@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    tools:context=".MainActivity"
+    >
+
+
+
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="20dp"
+        android:padding="20dp"
+        android:spinnerMode="dialog"
+        tools:layout_editor_absoluteY="32dp" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toBottomOf="@id/spinner"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:id="@+id/speedBetwL"
+        android:padding="10dp"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/speedBetwText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="15dp"
+            android:text="Скорость между ступеньками "
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/speedBetwTextVal"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/speedBetwTextVal"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/speedBetwText"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="15dp"
+            android:text="50"
+            android:layout_weight="1"/>
+
+        <androidx.appcompat.widget.AppCompatSeekBar
+            android:id="@+id/seekBTW"
+            app:layout_constraintTop_toBottomOf="@id/speedBetwText"
+            android:layout_marginTop="5dp"
+            android:tooltipText="RRR"
+            style="@style/Widget.AppCompat.SeekBar.Discrete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:progress="50"
+            tools:layout_editor_absoluteX="160dp"
+            tools:layout_editor_absoluteY="345dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toBottomOf="@id/speedBetwL"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:id="@+id/speedOnCh"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/speedOnChText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="15dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/speedOnChTextVal"
+            android:text="Скорость отрисовки ступеньки"
+            android:layout_weight="1"/>
+        <TextView
+            android:id="@+id/speedOnChTextVal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/speedOnChText"
+            android:textAlignment="center"
+            android:textSize="15dp"
+            android:text="50"
+            android:layout_weight="1"/>
+        <androidx.appcompat.widget.AppCompatSeekBar
+            app:layout_constraintTop_toBottomOf="@id/speedOnChText"
+            android:id="@+id/seekCh"
+            android:layout_marginTop="5dp"
+            android:tooltipText="RRR"
+            style="@style/Widget.AppCompat.SeekBar.Discrete"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:progress="50"
+            tools:layout_editor_absoluteX="160dp"
+            tools:layout_editor_absoluteY="345dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toBottomOf="@id/speedOnCh"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:id="@+id/delay"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/delaytext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/delaytextval"
+            android:textAlignment="center"
+            android:textSize="15dp"
+            android:text="Общая длительность подсветки"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/delaytextval"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/delaytext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="15dp"
+            android:text="50"
+            android:layout_weight="1"/>
+
+        <androidx.appcompat.widget.AppCompatSeekBar
+            app:layout_constraintTop_toTopOf="@id/delaytextval"
+            android:id="@+id/seekDelay"
+            android:layout_marginTop="20dp"
+            android:tooltipText="RRR"
+            style="@style/Widget.AppCompat.SeekBar.Discrete"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:progress="50"
+            tools:layout_editor_absoluteX="160dp"
+            tools:layout_editor_absoluteY="345dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingHorizontal="20dp"
+        android:id="@+id/laychoose"
+        app:layout_constraintTop_toBottomOf="@id/delay">
+
+        <TextView
+            android:width="100dp"
+            android:id="@+id/colortw"
+            android:height="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_gravity="left"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/buttonchoosecolor"
+
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:text="Выбрать цвет"
+            app:layout_constraintRight_toRightOf="parent"
+            android:id="@+id/chooseButton"
+            android:gravity="center"
+            android:background="@drawable/buttonstyle"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/send"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:text="Отправить"
+        android:background="@drawable/buttonstyle"
+        android:layout_marginVertical="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <Button
+        android:id="@+id/connect"
+        android:padding="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="10dp"
+        android:text="Подключиться"
+        android:background="@drawable/buttonreconnect"
+        app:layout_constraintBottom_toTopOf="@id/send"/>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
