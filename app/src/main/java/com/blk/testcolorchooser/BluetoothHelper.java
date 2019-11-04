@@ -16,9 +16,14 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
 
+
 public class BluetoothHelper {
+
+
+
     BluetoothHelper(Context context){
         this.context = context;
+
     }
     static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
@@ -79,9 +84,25 @@ public class BluetoothHelper {
         }
     }
 
-    void sendScenario(String name,int speedBetw,int speedCh,int maxDelay){
+    void sendScenario(String name,int speedBetw,int speedCh,int maxDelay,int color){
         if (isBtConnected) {
-            String s = String.format("{\"scenario\":\"%s\" , \"delayChairs\":\"%s\" , \"delayPerChair\":\"%s\" , \"delayAfterAnimation\":\"%s\"}\n", name, speedBetw, speedCh, maxDelay);
+            String hexColor = Integer.toHexString(color);
+            int red =(int) Long.parseLong(hexColor.substring(2,4),16);
+            int green = (int) Long.parseLong(hexColor.substring(4,6),16);
+            int blue = (int) Long.parseLong(hexColor.substring(6,8),16);
+            int brightness = (int) Long.parseLong(hexColor.substring(0,2),16);
+
+
+            String s = String.format("" +
+                    "{\"scenario\":\"%s\" , " +
+                    "\"delayChairs\":\"%s\" , " +
+                    "\"delayPerChair\":\"%s\" , " +
+                    "\"delayAfterAnimation\":\"%s\" ," +
+                    " \"red\":\"%s\" , " +
+                    "\"green\":\"%s\" , " +
+                    "\"blue\":\"%s\" , " +
+                    "\"brightness\":\"%s\"" +
+                    "}\n", name, speedBetw, speedCh, maxDelay*1000,red,green,blue,brightness);
 
             Log.d("MESSAGE SCENARIO", s);
             try {
@@ -91,6 +112,9 @@ public class BluetoothHelper {
             }
         }
     }
+
+
+
     private class connectbt extends AsyncTask<Void, Void, Void>  // UI thread
     {
         private boolean ConnectSuccess = true; //if it's here, it's almost connected
@@ -124,10 +148,13 @@ public class BluetoothHelper {
 
             if (!ConnectSuccess) {
                 Toast.makeText(context.getApplicationContext(), "Connection Failed Please Try again later", Toast.LENGTH_SHORT).show();
+
+
             } else {
                 Toast.makeText(context.getApplicationContext(), "Successfully Connected ", Toast.LENGTH_SHORT).show();
 
                 isBtConnected = true;
+
             }
             progress.dismiss();
         }

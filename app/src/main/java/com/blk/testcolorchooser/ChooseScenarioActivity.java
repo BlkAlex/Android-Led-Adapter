@@ -36,7 +36,6 @@ public class ChooseScenarioActivity extends AppCompatActivity {
         setContentView(R.layout.choosescenariolayout);
         final BluetoothHelper bh = new BluetoothHelper(this);
 
-        setColorToConnectionStatus(bh);
 
 
         final Spinner spinner = findViewById(R.id.spinner);
@@ -92,14 +91,13 @@ public class ChooseScenarioActivity extends AppCompatActivity {
             }
         });
 
-        bh.connect();
+        bh.connect();        setColorToConnectionStatus(bh);
+
         Button btn = findViewById(R.id.connect);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (bh.isBtConnected() == false) {
                     bh.connect();
-                }
             }
         });
 
@@ -120,7 +118,7 @@ public class ChooseScenarioActivity extends AppCompatActivity {
                     if (sn.getStringName().equals(spinner.getSelectedItem().toString()))
                         sendStringNameScenario = sn.getName();
                 }
-                bh.sendScenario(sendStringNameScenario, seekBTW.getProgress(), seekCh.getProgress(), seekDelay.getProgress());
+                bh.sendScenario(sendStringNameScenario, seekBTW.getProgress(), seekCh.getProgress(), seekDelay.getProgress(),currentColor);
 
             }
         });
@@ -200,9 +198,10 @@ public class ChooseScenarioActivity extends AppCompatActivity {
     void setColorToConnectionStatus(BluetoothHelper bh){
         TextView tw = findViewById(R.id.connectionstatus);
         if (bh.isBtConnected())
-            tw.setBackgroundColor(getColor(R.color.succes));
+        { tw.setBackgroundColor(getResources().getColor(R.color.succes));
+        tw.setText("Подключено");}
         else
-            tw.setBackgroundColor(getColor(R.color.fail));
+        {tw.setBackgroundColor(getResources().getColor(R.color.fail)); tw.setText("Не подключено");}
 
 
     }
